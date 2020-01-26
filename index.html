@@ -1,0 +1,326 @@
+<html>
+<head>
+	<style type="text/css">
+		html, body {
+			background-color: #886028;
+			font-family: 'Sans Serif';
+		}
+		
+		button#go, button#finalize {
+			font-size: 1.3em;
+			padding:5px;
+			margin-right: 60px;
+		}
+		
+		label, select {
+			display: block;
+			padding: 5 0px;
+		}
+		
+		label > span {
+			min-width: 150px;
+			display: inline-block;
+			font-weight: bold;
+		}
+		
+		
+		label > input {
+			width: 70px;
+			display: inline-block;
+			text-align: right;
+			padding: 3px;
+		}
+		
+		.cost {
+			text-align: right;
+		}
+		.avail{
+			text-align: center;
+		}
+		.reroll {
+			text-align: center;
+		}
+		.menu {
+			
+			
+		}
+		
+		.item {
+			padding: 5px;
+		}
+		
+		
+		.item-table {
+			margin-top: 20px;
+			border-collapse: collapse;
+		}
+		.item-table th {
+			padding: 3px 10px;
+			border: 1px solid black;
+		}
+		
+		.item-table td {
+			padding: 3px 10px;
+		}
+		.item-table tbody tr:nth-child(odd) {
+			background-color: #997039;
+		}
+		
+	
+	</style>
+	<script type="text/javascript">var module = {};</script>
+	<script src="itemList.js"></script>
+	
+	<script type="text/javascript">
+		/*
+		for(var m of module.exports.minor_item_list) {
+			if(!module.exports.items[m]) console.log('missing:', m);
+		}
+		*/
+		
+		function $all(sel, n) {
+			return (n || document).querySelectorAll(sel);
+		}
+
+		function $(sel, n) {
+			return (n || document).querySelector(sel);
+		}
+		
+		function $ce(tag, classes, content) {
+			var n = document.createElement(tag);
+			
+			if(classes) {
+				if(typeof classes == 'string') n.className = classes;
+				else if(classes instanceof Array) n.classList = classes;
+			}
+			
+			if(content) {
+				if(typeof content == 'string') n.innerHTML = content;
+				else if(typeof content == 'number') n.innerHTML = content + '';
+				else n.appendChild(content);
+			}
+			
+			return n;
+		}
+		
+		function roll(n, d) {
+			var s = 0;
+			for(var i = 0; i < n; i++) s += Math.floor((Math.random() * d)) + 1;
+			return s;
+		}
+		
+		function makeControl(e) {
+			var l = $ce('label');
+			l.appendChild($ce('span', '', e.getAttribute('label')));
+			
+			var c = $ce('input');
+			c.type = e.getAttribute('type');
+			c.value = e.innerHTML;
+			c.id = e.getAttribute('cid');
+			
+			l.appendChild(c);
+			
+			e.parentNode.insertBefore(l, e);
+			
+			e.parentNode.removeChild(e);
+			console.log('meh')
+		}
+		
+		window.addEventListener("load", function() {
+			
+			$all('control').forEach(makeControl);
+			
+			
+			$('#finalize').addEventListener('click', function(e) {
+				$('.menu').remove();
+				$all('.reroll').forEach(function(x) { x.remove() });
+			});
+			
+			$('#go').addEventListener('click', function(e) {
+				e.preventDefault();
+				
+				$('#finalize').style.display = 'inline-block';
+				
+				var raw = $('#item-count').value.toLowerCase();
+				var [n,d] = raw.split('d');
+				
+				/* for checking the dice algorithm
+				var o = {};
+				for(var i = 0; i < n+2; i ++) o[i] = 0;
+				for(var i = 0; i < 1000000; i ++){
+					o[roll(n,d)]++;
+				}
+				console.log(o);
+				*/
+				
+				function is_minor(x) {
+					var y =  module.exports.minor_item_list.indexOf(x) >= 0;
+// 					console.log('is_minor', x, y);
+					return y;
+				}
+				
+				function filterItems(rarity, minor) {
+// 					console.log(minor);
+					var o = [];
+					for(var k in module.exports.items) {
+						var i = module.exports.items[k];
+						if(
+							i.rarity == rarity  
+							&& (is_minor(i.id) == minor)
+							&& i.magic_item
+							&& !i.pocket_dimension
+						) {
+							o.push(i);
+						}
+					}
+					
+					return o;
+				}
+				
+				function getPrice(rarity, m) {
+					var t = {
+						'mundane': 1,
+						'common': 100,
+						'uncommon': 100,
+						'rare': 1000,
+						'very rare': 10000,
+						'legendary': 100000,
+					};
+					return m * t[rarity]
+				}
+				
+				
+				var cont = $('.item-list');
+				cont.innerHTML = '';
+				
+				var icmul = parseFloat($('#item-count').value);
+				var pmul = parseFloat($('#price-mul').value);
+				var qdice = $('#avail-dice').value.split('d');
+				
+				function qroll() {
+					return roll(qdice[0], qdice[1]);
+				}
+				function nfmt(s) {
+					return String(s).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+				}
+				
+				function addItem(item, list) {
+					var c = $ce('tr', 'item');
+					
+					var qty = qroll();
+					var price = 100 * pmul;
+					
+					var n_ = $ce('td', 'name', item.name);
+					var r_ = $ce('td', 'rarity', item.rarity);
+					var q_ = $ce('td', 'avail', qroll());
+					var p_ = $ce('td', 'cost', nfmt(getPrice(item.rarity, qty)));
+					
+					var rm = $ce('button', '', 'X');
+					rm.addEventListener('click', function(e) {
+						if(list.length == 0) {
+							c.remove();
+							return;
+						};
+						var ind = Math.floor(Math.random() * list.length);
+						
+						var it = list[ind];
+						var q = qroll();
+						
+						n_.innerHTML = it.name;
+						r_.innerHTML = it.rarity;
+						q_.innerHTML = q;
+						p_.innerHTML = nfmt(getPrice(it.rarity, q));
+						
+						list.splice(ind, 1);
+					});
+					
+					c.appendChild(n_);
+					c.appendChild(r_);
+					c.appendChild(q_);
+					c.appendChild(p_);
+					c.appendChild(rm);
+					
+					c.appendChild($ce('td', 'reroll', rm))
+					
+					cont.appendChild(c);
+				}
+				
+				
+				var CRn = $('#tier');
+				var CR = CRn.selectedOptions[0].value - 1;
+				
+				var item_res = {};
+				
+				for(var sz in module.exports.standard_awards) {
+					var z = module.exports.standard_awards[sz];
+					
+					
+					
+					for(var r in z) {
+						var k = sz + '_' + r;
+						var list = filterItems(r, sz == 'minor');
+						item_res[k] = list;
+						
+						var amt = Math.floor(z[r][CR] * icmul + .5);
+						var chosen = [];
+						
+						for(var n = 0; n < amt; n++) {
+							if(list.length == 0) break;
+							var ind = Math.floor(Math.random() * list.length);
+							
+							var it = list[ind];
+							chosen.push(it);
+							addItem(it, list);
+							
+							list.splice(ind, 1);
+							console.log(n, ind, list);
+						}
+						
+						console.log(sz, r, amt, list.length, chosen);
+						
+					} 
+					
+					
+				}
+				
+			})
+			
+		});
+		
+		
+	</script>
+</head>
+<body>
+	<div class="menu">
+		<select id="tier">
+			<option value="1">Tier 1:  1-4</option>
+			<option value="2" selected>Tier 2:  5-10</option>
+			<option value="3">Tier 3: 11-16</option>
+			<option value="4">Tier 4: 17-20</option>
+		</select>
+		
+		<control cid="item-count" label="Item Count Mul.:" type="edit">1</control>
+		<control cid="price-mul" label="Price Multiplier:" type="edit">1</control>
+		<control cid="avail-dice" label="Avail/Price:" type="edit">1d6</control>
+		
+		
+		<br/>
+		<br/>
+		<button id="go">Generate</button>
+		<button id="finalize" style="display:none;">Finalize</button>
+	</div>
+	<table class="item-table" >
+		<thead>
+			<tr>
+				<th>Item Name</th>
+				<th>Rarity</th>
+				<th>Qty.<br/>Available</th>
+				<th>Price</th>
+				<th class="reroll">Reroll</th>
+			</tr>
+		</thead>
+		<tbody class="item-list"></tbody>
+	</table>
+	
+</body>
+</html>
