@@ -12,13 +12,27 @@
 			margin-right: 60px;
 		}
 		
+		.left {
+			float: left;
+		}
+		
+		.option-list > div {
+			margin-right: 40px;
+		}
+		
+		.option-list::after {
+			clear: both;
+			content: "";
+			display: table;
+		}
+		
 		label, select {
 			display: block;
 			padding: 5 0px;
 		}
 		
 		label > span {
-			min-width: 150px;
+			min-width: 140px;
 			display: inline-block;
 			font-weight: bold;
 		}
@@ -77,6 +91,141 @@
 			if(!module.exports.items[m]) console.log('missing:', m);
 		}
 		*/
+		
+		function clone(obj) {
+			var o = {};
+			for(var k in obj) {
+				var v = obj[k];
+				
+				if(typeof v == 'object') {
+					if(v instanceof Array) o = [];
+					o[k] = clone(v);
+				}
+				else {
+					o[k] = v;
+				}
+			}
+			return o;
+		}
+		
+		
+		var magic_ammo_rarity = {
+			1: 'uncommon',
+			2: 'rare',
+			3: 'very rare',
+		}
+		var magic_weapon_rarity = {
+			1: 'uncommon',
+			2: 'rare',
+			3: 'very rare',
+		}
+		var magic_armor_rarity = {
+			1: 'rare',
+			2: 'very rare',
+			3: 'legendary',
+		}
+		
+		var armor_of_resistance_types = [
+			"Acid",
+			"Cold",
+			"Fire",
+			"Force",
+			"Lightning",
+			"Necrotic",
+			"Poison",
+			"Psychic",
+			"Radiant",
+			"Thunder",
+		];
+		
+		// fill in all the ammo
+		for(var owi in module.exports.items) {
+			var ow = module.exports.items[owi];
+			if(!(ow.type == 'ammunition' && ow.rarity == 'common' && !ow.magic_item)) continue;
+			
+			for(var b = 1; b <= 3; b++) {
+				var nw = clone(ow);
+				nw.name += ', +' + b;
+				nw.id = owi + ', +' + b;
+				nw.magic_item = true;
+				nw.rarity = magic_ammo_rarity[b];
+				nw.attack_bonus = b;
+				nw.damage_bonus = b;
+				
+				module.exports.items[nw.id] = nw;
+				module.exports.minor_item_list.push(nw.id);
+			}
+		}
+		
+		// fill in all the weapons
+		for(var owi in module.exports.items) {
+			var ow = module.exports.items[owi];
+			if(!(ow.type == 'weapon' && ow.rarity == 'common' && !ow.magic_item)) continue;
+			
+			for(var b = 1; b <= 3; b++) {
+				var nw = clone(ow);
+				nw.name += ', +' + b;
+				nw.id = owi + ', +' + b;
+				nw.magic_item = true;
+				nw.rarity = magic_weapon_rarity[b];
+				nw.attack_bonus = b;
+				nw.damage_bonus = b;
+				
+				module.exports.items[nw.id] = nw;
+			}
+		}
+		
+		// fill in all the armor
+		for(var oai in module.exports.items) {
+			var oa = module.exports.items[oai];
+			if(!(oa.type == 'armor' && oa.rarity == 'common' &&  !oa.magic_item)) continue;
+			
+			for(var b = 1; b <= 3; b++) {
+				var na = clone(oa);
+				na.name += ', +' + b;
+				na.id = oai + ', +' + b;
+				na.magic_item = true;
+				na.rarity = magic_armor_rarity[b];
+				na.ac_bonus = b;
+				module.exports.items[na.id] = na;
+				
+				// armor of resistance
+				for(var dtype of armor_of_resistance_types) {
+					var na = clone(oa);
+					na.name = ' of Resistance, ' + dtype;
+					na.id = oai + ' of resistance, ' + dtype.toLowerCase();
+					na.magic_item = true;
+					na.rarity = 'rare';
+					na.ac_bonus = b;
+					module.exports.items[na.id] = na;
+				}
+			}
+			
+			if((oa.subtype == 'medium' || oa.subtype == 'heavy') && oa.id != 'hide') {
+				// mithral
+				var na = clone(oa);
+				na.name = 'Mithral ' + na.name;
+				na.id += 'mithral ' + oai;
+				na.magic_item = true;
+				na.rarity = 'uncommon';
+				na.mithral = true;
+				na.min_str = '-';
+				delete na.stealth;
+				module.exports.items[na.id] = na;
+				module.exports.minor_item_list.push(na.id);
+				
+				// adamantium
+				var na = clone(oa);
+				na.name = 'Adamantine ' + na.name;
+				na.id += 'adamantine ' + oai;
+				na.magic_item = true;
+				na.rarity = 'uncommon';
+				na.adamantium = true;
+				module.exports.items[na.id] = na;
+			}
+		}
+		
+		
 		
 		function $all(sel, n) {
 			return (n || document).querySelectorAll(sel);
@@ -166,7 +315,7 @@
 						var i = module.exports.items[k];
 						if(
 							i.rarity == rarity  
-							&& (is_minor(i.id) == minor)
+// 							&& (is_minor(i.id) == minor)
 							&& i.magic_item
 							&& !i.pocket_dimension
 						) {
@@ -178,21 +327,21 @@
 				}
 				
 				function getPrice(rarity, m) {
-					var t = {
-						'mundane': 1,
-						'common': 100,
-						'uncommon': 100,
-						'rare': 1000,
-						'very rare': 10000,
-						'legendary': 100000,
+					switch(rarity) {
+						case 'common': return (roll(1, 6) + 1) * 10;
+						case 'uncommon': return roll(1, 6) * 100;
+						case 'rare': return roll(1, 6) * 1000;
+						case 'very rare': return roll(1, 6) * 10000;
+						case 'legendary': return roll(2, 6) * 25000;
 					};
-					return m * t[rarity]
 				}
 				
 				
 				var cont = $('.item-list');
 				cont.innerHTML = '';
 				
+				var max_weapons = parseFloat($('#max-weapons').value);
+				var max_armor = parseFloat($('#max-armor').value);
 				var icmul = parseFloat($('#item-count').value);
 				var pmul = parseFloat($('#price-mul').value);
 				var qdice = $('#avail-dice').value.split('d');
@@ -246,6 +395,26 @@
 				}
 				
 				
+				function filterWeapons(list, special) {
+					for(var ind in list) {
+						var i = list[ind];
+						if(i.type == 'weapon') {
+							special.weapons.push(i);
+							list.splice(ind, 1);
+						}
+					}
+				}
+				
+				function filterArmor(list, special) {
+					for(var ind in list) {
+						var i = list[ind];
+						if(i.type == 'armor') {
+							special.weapons.push(i);
+							list.splice(ind, 1);
+						}
+					}
+				}
+				
 				var CRn = $('#tier');
 				var CR = CRn.selectedOptions[0].value - 1;
 				
@@ -261,16 +430,40 @@
 						var list = filterItems(r, sz == 'minor');
 						item_res[k] = list;
 						
-						var amt = Math.floor(z[r][CR] * icmul + .5);
+						var amt = Math.floor((z[r][CR] * icmul) + .5);
 						var chosen = [];
+						var weapon_cnt = 0;
+						var armor_cnt = 0;
+						
+						var special = {
+							weapons: [],
+							armor: [],
+						};
 						
 						for(var n = 0; n < amt; n++) {
 							if(list.length == 0) break;
 							var ind = Math.floor(Math.random() * list.length);
 							
 							var it = list[ind];
+							
+							if(it.type == 'weapon') {
+								if(++weapon_cnt > max_weapons) {
+									filterWeapons(list, special);
+									n--;
+									continue;
+								}
+							}
+							
+							if(it.type == 'armor') {
+								if(++armor_cnt > max_armor) {
+									filterArmor(list, special);
+									n--;
+									continue;
+								}
+							}
+							
 							chosen.push(it);
-							addItem(it, list);
+							addItem(it, list, special);
 							
 							list.splice(ind, 1);
 							console.log(n, ind, list);
@@ -299,10 +492,18 @@
 			<option value="4">Tier 4: 17-20</option>
 		</select>
 		
-		<control cid="item-count" label="Item Count Mul.:" type="edit">1</control>
-		<control cid="price-mul" label="Price Multiplier:" type="edit">1</control>
-		<control cid="avail-dice" label="Avail/Price:" type="edit">1d6</control>
-		
+		<div class="option-list">
+			<div class="left">
+				<control cid="item-count" label="Item Count Mul.:" type="edit">1</control>
+				<control cid="price-mul" label="Price Multiplier:" type="edit">1</control>
+				<control cid="avail-dice" label="Avail/Price:" type="edit">1d6</control>
+			</div>
+			<div class="left">
+				<label><span>Per Rarity:</span></label>
+				<control cid="max-weapons" label="Max Weapons:" type="edit">5</control>
+				<control cid="max-armor" label="Max Armor:" type="edit">5</control>
+			</div>
+		</div>
 		
 		<br/>
 		<br/>
