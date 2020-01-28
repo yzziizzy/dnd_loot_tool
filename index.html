@@ -100,6 +100,23 @@
 		}
 		*/
 		
+		var prng_seed = Math.floor(Math.random() * 10000 + 10000);
+		
+		var wh = window.location.hash;
+		var hash_opts = [];
+		if(wh) {
+			var params = wh.split('_');
+			prng_seed = params[0];
+			hash_opts = params[1].split('!');
+		}
+			
+		
+		function frand() {
+			var x = Math.sin(prng_seed++) * 31337;
+			return x - Math.floor(x);
+		}
+		
+		
 		function clone(obj) {
 			var o = {};
 			for(var k in obj) {
@@ -178,11 +195,23 @@
 			}
 		}
 		
+		// make a list of 'any' weapons
+		var any_weapon_list = [];
+		for(var owi in module.exports.items) {
+			var ow = module.exports.items[owi];
+			if(ow.type == 'weapon' && ow.magic_item && ow.any) {
+				any_weapon_list.push(ow);
+				delete module.exports.items[owi];
+			}
+		}
+		
+		
 		// fill in all the weapons
 		for(var owi in module.exports.items) {
 			var ow = module.exports.items[owi];
-			if(!(ow.type == 'weapon' && ow.rarity == 'common' && !ow.magic_item)) continue;
+			if(!(ow.type == 'weapon' && ow.rarity == 'mundane' && !ow.magic_item)) continue;
 			
+			// normal +1/2/3 magic weapons
 			for(var b = 1; b <= 3; b++) {
 				var nw = clone(ow);
 				nw.name += ', +' + b;
@@ -194,12 +223,40 @@
 				
 				module.exports.items[nw.id] = nw;
 			}
+			
+			// "any" weapons
+			for(var aw of any_weapon_list) {
+				var good = 0;
+				if(aw.any instanceof Array) {
+					for(var aa of aw.any) {
+						if(aw.any == 'weapon') good = 1;
+						else if(aw.any == ow.weapon_style) good = 1;
+						else if(aw.any == 'sword, slashing' && ow.weapon_style == 'sword') {
+							if(ow.damage.indexOf('slashing') >= 0) good = 1; 
+						}
+						else continue;
+						break;
+					}
+				}
+				else if(aw.any == 'weapon') good = 1;
+				else if(aw.any == ow.weapon_style) good = 1;
+				else if(aw.any == 'sword, slashing' && ow.weapon_style == 'sword') {
+					if(ow.damage.indexOf('slashing') >= 0) good = 1; 
+				}
+						
+				if(good == 1) {
+					var nw = clone(aw);
+					nw.id = aw.id+ ', ' + ow.id;
+					nw.name = aw.name + ', ' + ow.name;
+					module.exports.items[nw.id] = nw;
+				}
+			}
 		}
 		
 		// fill in all the armor
 		for(var oai in module.exports.items) {
 			var oa = module.exports.items[oai];
-			if(!(oa.type == 'armor' && oa.rarity == 'common' &&  !oa.magic_item)) continue;
+			if(!(oa.type == 'armor' && oa.rarity == 'mundane' &&  !oa.magic_item)) continue;
 			
 			for(var b = 1; b <= 3; b++) {
 				var na = clone(oa);
@@ -295,7 +352,7 @@
 		
 		function roll(n, d) {
 			var s = 0;
-			for(var i = 0; i < n; i++) s += Math.floor((Math.random() * d)) + 1;
+			for(var i = 0; i < n; i++) s += Math.floor((frand() * d)) + 1;
 			return s;
 		}
 		
@@ -308,15 +365,211 @@
 			c.value = e.innerHTML;
 			c.id = e.getAttribute('cid');
 			
+			if(c.type == "checkbox") {
+				if(e.innerHTML == "1") {
+					c.checked = true;
+				}
+			}
+			
 			l.appendChild(c);
 			
 			e.parentNode.insertBefore(l, e);
 			
 			e.parentNode.removeChild(e);
-			console.log('meh')
 		}
 		
+		
+		function is_minor(x) {
+			return module.exports.minor_item_list.indexOf(x) >= 0;
+		}
+		
+		
+		
+		function getPrice(rarity, m) {
+			switch(rarity) {
+				case 'mundane': return (roll(1, 6) + 1);
+				case 'common': return (roll(1, 6) + 1) * 10;
+				case 'uncommon': return roll(1, 6) * 100;
+				case 'rare': return roll(1, 6) * 1000;
+				case 'very rare': return roll(1, 6) * 10000;
+				case 'legendary': return roll(2, 6) * 25000;
+			};
+		}
+		
+		function nfmt(s) {
+			return String(s).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		}
+		
+		function filterType(type, list, special) {
+			for(var ind in list) {
+				var i = list[ind];
+				if(i.type == type) {
+					special[type].push(i);
+					list.splice(ind, 1);
+				}
+			}
+		}
+		
+		
+		function generateList(opts) {
+				
+			var cont = $('.item-list');
+			cont.innerHTML = '';
+			
+			
+			function qroll() {
+				return roll(opts.qdice[0], opts.qdice[1]);
+			}
+			
+			function filterItems(rarity, minor) {
+				var o = [];
+				for(var k in module.exports.items) {
+					var i = module.exports.items[k];
+					if(
+						i.rarity == rarity  
+						&& (is_minor(i.id) == minor)
+						&& i.magic_item
+					) {
+						if(opts.exclude_pocket && i.pocket_dimension) continue;
+					
+						o.push(i);
+					}
+				}
+				
+				return o;
+			}
+			
+			
+			function addItem(item, list) {
+				var c = $ce('tr', 'item');
+				
+				var qty = qroll();
+				var price = 100 * opts.pmul;
+				
+				var n_ = $ce('td', 'name', item.name);
+				var r_ = $ce('td', 'rarity', item.rarity);
+				var q_ = $ce('td', 'avail', qroll());
+				var p_ = $ce('td', 'cost', nfmt(getPrice(item.rarity, qty)));
+				
+				var rm = $ce('button', '', 'X');
+				rm.addEventListener('click', function(e) {
+					if(list.length == 0) {
+						c.remove();
+						return;
+					};
+					var ind = Math.floor(frand() * list.length);
+					
+					var it = list[ind];
+					var q = qroll();
+					
+					n_.innerHTML = it.name;
+					r_.innerHTML = it.rarity;
+					q_.innerHTML = q;
+					p_.innerHTML = nfmt(getPrice(it.rarity, q));
+					
+					list.splice(ind, 1);
+				});
+				
+				c.appendChild(n_);
+				c.appendChild(r_);
+				c.appendChild(q_);
+				c.appendChild(p_);
+				c.appendChild(rm);
+				
+				c.appendChild($ce('td', 'reroll', rm))
+				
+				cont.appendChild(c);
+			}
+			
+			
+			var item_res = {};
+			
+			for(var sz in module.exports.standard_awards) {
+				var z = module.exports.standard_awards[sz];
+				
+				for(var r in z) {
+					var k = sz + '_' + r;
+					var list = filterItems(r, sz == 'minor');
+					item_res[k] = list;
+					
+					var amt = Math.floor((z[r][opts.CR] * opts.icmul) + .5);
+					var chosen = [];
+					var weapon_cnt = 0;
+					var armor_cnt = 0;
+					var scrolls_cnt = 0;
+					
+					var special = {
+						weapon: [],
+						armor: [],
+						Scroll: [],
+					};
+					
+					for(var n = 0; n < amt; n++) {
+						if(list.length == 0) break;
+						var ind = Math.floor(frand() * list.length);
+						
+						var it = list[ind];
+						
+						if(it.type == 'weapon') {
+							if(++weapon_cnt > opts.max_weapons) {
+								filterType('weapon', list, special);
+								n--;
+								continue;
+							}
+						}
+						
+						if(it.type == 'armor') {
+							if(++armor_cnt > opts.max_armor) {
+								filterType('armor', list, special);
+								n--;
+								continue;
+							}
+						}
+						
+						if(it.type == 'Scroll') {
+							if(++scrolls_cnt > opts.max_scrolls) {
+								filterType('Scroll', list, special);
+								n--;
+								continue;
+							}
+						}
+						
+						chosen.push(it);
+						addItem(it, list, special);
+						
+						list.splice(ind, 1);
+// 							console.log(n, ind, list);
+					}
+					
+// 						console.log(sz, r, amt, list.length, chosen);
+				} 
+				
+				
+			}
+		}
+		
+		
 		window.addEventListener("load", function() {
+			
+			if(wh) {
+				
+				generateList({
+					exclude_pocket: hash_opts[0] == 1,
+					max_weapons: hash_opts[1]|0,
+					max_armor:   hash_opts[2]|0,
+					max_scrolls: hash_opts[3]|0,
+					icmul: hash_opts[4]|0,
+					pmul:  hash_opts[5]|0,
+					qdice: hash_opts[6].split('d'),
+					CR:    hash_opts[7]|0,
+				});
+			
+				$('.menu').remove();
+				$all('.reroll').forEach(function(x) { x.remove() });
+				
+				return;
+			}
+			
 			
 			$all('control').forEach(makeControl);
 			
@@ -331,8 +584,8 @@
 				
 				$('#finalize').style.display = 'inline-block';
 				
-				var raw = $('#item-count').value.toLowerCase();
-				var [n,d] = raw.split('d');
+// 				var raw = $('#item-count').value.toLowerCase();
+// 				var [n,d] = raw.split('d');
 				
 				/* for checking the dice algorithm
 				var o = {};
@@ -343,181 +596,23 @@
 				console.log(o);
 				*/
 				
-				function is_minor(x) {
-					var y =  module.exports.minor_item_list.indexOf(x) >= 0;
-// 					console.log('is_minor', x, y);
-					return y;
-				}
-				
-				function filterItems(rarity, minor) {
-// 					console.log(minor);
-					var o = [];
-					for(var k in module.exports.items) {
-						var i = module.exports.items[k];
-						if(
-							i.rarity == rarity  
-// 							&& (is_minor(i.id) == minor)
-							&& i.magic_item
-							&& !i.pocket_dimension
-						) {
-							o.push(i);
-						}
-					}
-					
-					return o;
-				}
-				
-				function getPrice(rarity, m) {
-					switch(rarity) {
-						case 'common': return (roll(1, 6) + 1) * 10;
-						case 'uncommon': return roll(1, 6) * 100;
-						case 'rare': return roll(1, 6) * 1000;
-						case 'very rare': return roll(1, 6) * 10000;
-						case 'legendary': return roll(2, 6) * 25000;
-					};
-				}
-				
-				
-				var cont = $('.item-list');
-				cont.innerHTML = '';
-				
-				var max_weapons = parseFloat($('#max-weapons').value);
-				var max_armor = parseFloat($('#max-armor').value);
-				var max_scrolls = parseFloat($('#max-scrolls').value);
-				var icmul = parseFloat($('#item-count').value);
-				var pmul = parseFloat($('#price-mul').value);
-				var qdice = $('#avail-dice').value.split('d');
-				
-				function qroll() {
-					return roll(qdice[0], qdice[1]);
-				}
-				function nfmt(s) {
-					return String(s).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-				}
-				
-				function addItem(item, list) {
-					var c = $ce('tr', 'item');
-					
-					var qty = qroll();
-					var price = 100 * pmul;
-					
-					var n_ = $ce('td', 'name', item.name);
-					var r_ = $ce('td', 'rarity', item.rarity);
-					var q_ = $ce('td', 'avail', qroll());
-					var p_ = $ce('td', 'cost', nfmt(getPrice(item.rarity, qty)));
-					
-					var rm = $ce('button', '', 'X');
-					rm.addEventListener('click', function(e) {
-						if(list.length == 0) {
-							c.remove();
-							return;
-						};
-						var ind = Math.floor(Math.random() * list.length);
-						
-						var it = list[ind];
-						var q = qroll();
-						
-						n_.innerHTML = it.name;
-						r_.innerHTML = it.rarity;
-						q_.innerHTML = q;
-						p_.innerHTML = nfmt(getPrice(it.rarity, q));
-						
-						list.splice(ind, 1);
-					});
-					
-					c.appendChild(n_);
-					c.appendChild(r_);
-					c.appendChild(q_);
-					c.appendChild(p_);
-					c.appendChild(rm);
-					
-					c.appendChild($ce('td', 'reroll', rm))
-					
-					cont.appendChild(c);
-				}
-				
-				
-				function filterType(type, list, special) {
-					for(var ind in list) {
-						var i = list[ind];
-						if(i.type == type) {
-							special[type].push(i);
-							list.splice(ind, 1);
-						}
-					}
-				}
-				
 				var CRn = $('#tier');
-				var CR = CRn.selectedOptions[0].value - 1;
 				
-				var item_res = {};
+				var o = {
+					exclude_pocket: $('#exclude-pockets').checked,
+					max_weapons: parseFloat($('#max-weapons').value),
+					max_armor: parseFloat($('#max-armor').value),
+					max_scrolls: parseFloat($('#max-scrolls').value),
+					icmul: parseFloat($('#item-count').value),
+					pmul: parseFloat($('#price-mul').value),
+					qdice: $('#avail-dice').value.split('d'),
+					CR: CRn.selectedOptions[0].value - 1,
+				};
 				
-				for(var sz in module.exports.standard_awards) {
-					var z = module.exports.standard_awards[sz];
-					
-					
-					
-					for(var r in z) {
-						var k = sz + '_' + r;
-						var list = filterItems(r, sz == 'minor');
-						item_res[k] = list;
-						
-						var amt = Math.floor((z[r][CR] * icmul) + .5);
-						var chosen = [];
-						var weapon_cnt = 0;
-						var armor_cnt = 0;
-						var scrolls_cnt = 0;
-						
-						var special = {
-							weapon: [],
-							armor: [],
-							Scroll: [],
-						};
-						
-						for(var n = 0; n < amt; n++) {
-							if(list.length == 0) break;
-							var ind = Math.floor(Math.random() * list.length);
-							
-							var it = list[ind];
-							
-							if(it.type == 'weapon') {
-								if(++weapon_cnt > max_weapons) {
-									filterType('weapon', list, special);
-									n--;
-									continue;
-								}
-							}
-							
-							if(it.type == 'armor') {
-								if(++armor_cnt > max_armor) {
-									filterType('armor', list, special);
-									n--;
-									continue;
-								}
-							}
-							
-							if(it.type == 'Scroll') {
-								if(++scrolls_cnt > max_scrolls) {
-									filterType('Scroll', list, special);
-									n--;
-									continue;
-								}
-							}
-							
-							chosen.push(it);
-							addItem(it, list, special);
-							
-							list.splice(ind, 1);
-							console.log(n, ind, list);
-						}
-						
-						console.log(sz, r, amt, list.length, chosen);
-						
-					} 
-					
-					
-				}
+				generateList(o);
 				
+				window.location.hash = prng_seed_orig + '_' 
+					+ (o.exclude_pocket ? '1' : '0') + '!'
 			})
 			
 		});
@@ -539,12 +634,20 @@
 				<control cid="item-count" label="Item Count Mul.:" type="edit">1</control>
 				<control cid="price-mul" label="Price Multiplier:" type="edit">1</control>
 				<control cid="avail-dice" label="Avail/Price:" type="edit">1d6</control>
-			</div>
-			<div class="left">
+			<!--</div>
+			<div class="left">-->
+				<hr/>
 				<label><span>Per Rarity:</span></label>
 				<control cid="max-weapons" label="Max Weapons:" type="edit">2</control>
 				<control cid="max-armor" label="Max Armor:" type="edit">2</control>
 				<control cid="max-scrolls" label="Max Scrolls:" type="edit">2</control>
+				
+				<hr/>
+				<control cid="exclude-pockets" label="Exclude Pocket Dimension:" type="checkbox">1</control>
+				<control cid="include-PH" label="Include Player's Handbook:" type="checkbox">1</control>
+				<control cid="include-DM" label="Include DM's Guide:" type="checkbox">1</control>
+				<control cid="include-XG" label="Include Xanathar's Guide:" type="checkbox">1</control>
+				<control cid="include-EE" label="Include Elemental Evil:" type="checkbox">0</control>
 			</div>
 		</div>
 		
