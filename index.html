@@ -87,6 +87,14 @@
 	
 	<script type="text/javascript">
 		/*
+		art, gems, statues, etc.
+		"mundane"
+		attachment, ie. finger, shoulder, hat, etc.
+		scrolls
+		
+		*/
+	
+		/*
 		for(var m of module.exports.minor_item_list) {
 			if(!module.exports.items[m]) console.log('missing:', m);
 		}
@@ -192,7 +200,7 @@
 				// armor of resistance
 				for(var dtype of armor_of_resistance_types) {
 					var na = clone(oa);
-					na.name = ' of Resistance, ' + dtype;
+					na.name += ' of Resistance, ' + dtype;
 					na.id = oai + ' of resistance, ' + dtype.toLowerCase();
 					na.magic_item = true;
 					na.rarity = 'rare';
