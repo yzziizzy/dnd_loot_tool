@@ -146,6 +146,19 @@
 			"Thunder",
 		];
 		
+		var scroll_level_data = {
+			0: {name: 'Cantrip', rarity: 'common', save_dc: 13, attack_bonus: 5},
+			1: {name: '1st', rarity: 'common', save_dc: 13, attack_bonus: 5},
+			2: {name: '2nd', rarity: 'uncommon', save_dc: 13, attack_bonus: 5},
+			3: {name: '3rd', rarity: 'uncommon', save_dc: 15, attack_bonus: 7},
+			4: {name: '4th', rarity: 'rare', save_dc: 15, attack_bonus: 7},
+			5: {name: '5th', rarity: 'rare', save_dc: 17, attack_bonus: 9},
+			6: {name: '6th', rarity: 'very rare', save_dc: 17, attack_bonus: 9},
+			7: {name: '7th', rarity: 'very rare', save_dc: 18, attack_bonus: 10},
+			8: {name: '8th', rarity: 'very rare', save_dc: 18, attack_bonus: 10},
+			9: {name: '9th', rarity: 'legendary', save_dc: 19, attack_bonus: 11},
+		};
+		
 		// fill in all the ammo
 		for(var owi in module.exports.items) {
 			var ow = module.exports.items[owi];
@@ -233,6 +246,26 @@
 			}
 		}
 		
+		// fill in the scrolls
+		for(var spi in module.exports.spell_list) {
+			var sp = module.exports.spell_list[spi];
+			
+			var ld = scroll_level_data[sp.level];
+			var sc = {
+				id: "scroll of " + sp.id,
+				name: "Scroll of " + sp.name,
+				type: "Scroll",
+				level: sp.level,
+				school: sp.school,
+				magic_item: true,
+				rarity: ld.rarity,
+				attack_bonus: ld.attack_bonus,
+				save_dc: ld.save_dc,
+			};
+			
+			module.exports.items[sc.id] = sc;
+			module.exports.minor_item_list.push(sc.id);
+		}
 		
 		
 		function $all(sel, n) {
@@ -350,6 +383,7 @@
 				
 				var max_weapons = parseFloat($('#max-weapons').value);
 				var max_armor = parseFloat($('#max-armor').value);
+				var max_scrolls = parseFloat($('#max-scrolls').value);
 				var icmul = parseFloat($('#item-count').value);
 				var pmul = parseFloat($('#price-mul').value);
 				var qdice = $('#avail-dice').value.split('d');
@@ -403,21 +437,11 @@
 				}
 				
 				
-				function filterWeapons(list, special) {
+				function filterType(type, list, special) {
 					for(var ind in list) {
 						var i = list[ind];
-						if(i.type == 'weapon') {
-							special.weapons.push(i);
-							list.splice(ind, 1);
-						}
-					}
-				}
-				
-				function filterArmor(list, special) {
-					for(var ind in list) {
-						var i = list[ind];
-						if(i.type == 'armor') {
-							special.weapons.push(i);
+						if(i.type == type) {
+							special[type].push(i);
 							list.splice(ind, 1);
 						}
 					}
@@ -442,10 +466,12 @@
 						var chosen = [];
 						var weapon_cnt = 0;
 						var armor_cnt = 0;
+						var scrolls_cnt = 0;
 						
 						var special = {
-							weapons: [],
+							weapon: [],
 							armor: [],
+							Scroll: [],
 						};
 						
 						for(var n = 0; n < amt; n++) {
@@ -456,7 +482,7 @@
 							
 							if(it.type == 'weapon') {
 								if(++weapon_cnt > max_weapons) {
-									filterWeapons(list, special);
+									filterType('weapon', list, special);
 									n--;
 									continue;
 								}
@@ -464,7 +490,15 @@
 							
 							if(it.type == 'armor') {
 								if(++armor_cnt > max_armor) {
-									filterArmor(list, special);
+									filterType('armor', list, special);
+									n--;
+									continue;
+								}
+							}
+							
+							if(it.type == 'Scroll') {
+								if(++scrolls_cnt > max_scrolls) {
+									filterType('Scroll', list, special);
 									n--;
 									continue;
 								}
@@ -508,8 +542,9 @@
 			</div>
 			<div class="left">
 				<label><span>Per Rarity:</span></label>
-				<control cid="max-weapons" label="Max Weapons:" type="edit">5</control>
-				<control cid="max-armor" label="Max Armor:" type="edit">5</control>
+				<control cid="max-weapons" label="Max Weapons:" type="edit">2</control>
+				<control cid="max-armor" label="Max Armor:" type="edit">2</control>
+				<control cid="max-scrolls" label="Max Scrolls:" type="edit">2</control>
 			</div>
 		</div>
 		
