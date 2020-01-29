@@ -176,6 +176,16 @@
 			9: {name: '9th', rarity: 'legendary', save_dc: 19, attack_bonus: 11},
 		};
 		
+		// make a list of 'any' ammos
+		var any_ammo_list = [];
+		for(var owi in module.exports.items) {
+			var ow = module.exports.items[owi];
+			if(ow.type == 'ammunition' && ow.magic_item && ow.any) {
+				any_ammo_list.push(ow);
+				delete module.exports.items[owi];
+			}
+		}
+		
 		// fill in all the ammo
 		for(var owi in module.exports.items) {
 			var ow = module.exports.items[owi];
@@ -192,6 +202,20 @@
 				
 				module.exports.items[nw.id] = nw;
 				module.exports.minor_item_list.push(nw.id);
+			}
+			
+			// "any" ammos
+			for(var aw of any_ammo_list) {
+				var good = 0;
+				if(aw.any == 'ammunition') good = 1;
+						
+				if(good == 1) {
+					var nw = clone(aw);
+					nw.id = aw.id+ ', ' + ow.id;
+					nw.name = aw.name + ', ' + ow.name;
+					module.exports.items[nw.id] = nw;
+					module.exports.minor_item_list.push(nw.id);
+				}
 			}
 		}
 		
@@ -318,6 +342,7 @@
 				rarity: ld.rarity,
 				attack_bonus: ld.attack_bonus,
 				save_dc: ld.save_dc,
+				consumable: true,
 			};
 			
 			module.exports.items[sc.id] = sc;
@@ -358,7 +383,6 @@
 		
 		function makeControl(e) {
 			var l = $ce('label');
-			l.appendChild($ce('span', '', e.getAttribute('label')));
 			
 			var c = $ce('input');
 			c.type = e.getAttribute('type');
@@ -369,9 +393,14 @@
 				if(e.innerHTML == "1") {
 					c.checked = true;
 				}
+				
+				l.appendChild(c);
+				l.appendChild($ce('span', '', e.getAttribute('label')));
 			}
-			
-			l.appendChild(c);
+			else {
+				l.appendChild($ce('span', '', e.getAttribute('label')));
+				l.appendChild(c);
+			}
 			
 			e.parentNode.insertBefore(l, e);
 			
@@ -385,15 +414,21 @@
 		
 		
 		
-		function getPrice(rarity, m) {
-			switch(rarity) {
-				case 'mundane': return (roll(1, 6) + 1);
-				case 'common': return (roll(1, 6) + 1) * 10;
-				case 'uncommon': return roll(1, 6) * 100;
-				case 'rare': return roll(1, 6) * 1000;
-				case 'very rare': return roll(1, 6) * 10000;
-				case 'legendary': return roll(2, 6) * 25000;
+		function getPrice(item, q) {
+			var x;
+			switch(item.rarity) {
+				case 'mundane': x = q + 1; break;
+				case 'common': x = q * 10; break;
+				case 'uncommon': x = q * 100; break;
+				case 'rare': x = q * 1000; break;
+				case 'very rare': x = q * 10000; break;
+				case 'legendary': x = (roll(1, 6) + q) * 25000; break;
+				case 'artifact': x = (roll(2, 6) + q) * 250000; break;
 			};
+			
+			if(item.consumable == true) x = Math.max(1, Math.floor((x / 2) + 0.5));
+			
+			return x;
 		}
 		
 		function nfmt(s) {
@@ -425,6 +460,11 @@
 				var o = [];
 				for(var k in module.exports.items) {
 					var i = module.exports.items[k];
+					if(opts.exclude_cursed && i.cursed) continue;
+					if(opts.include.PH == false && i.src == 'PH') continue;
+					if(opts.include.DM == false && i.src == 'DM') continue;
+					if(opts.include.XG == false && i.src == 'XG') continue;
+					if(opts.include.EE == false && i.src == 'EE') continue;
 					if(
 						i.rarity == rarity  
 						&& (is_minor(i.id) == minor)
@@ -449,7 +489,7 @@
 				var n_ = $ce('td', 'name', item.name);
 				var r_ = $ce('td', 'rarity', item.rarity);
 				var q_ = $ce('td', 'avail', qroll());
-				var p_ = $ce('td', 'cost', nfmt(getPrice(item.rarity, qty)));
+				var p_ = $ce('td', 'cost', nfmt(getPrice(item, qty)));
 				
 				var rm = $ce('button', '', 'X');
 				rm.addEventListener('click', function(e) {
@@ -465,7 +505,7 @@
 					n_.innerHTML = it.name;
 					r_.innerHTML = it.rarity;
 					q_.innerHTML = q;
-					p_.innerHTML = nfmt(getPrice(it.rarity, q));
+					p_.innerHTML = nfmt(getPrice(it, q));
 					
 					list.splice(ind, 1);
 				});
@@ -584,6 +624,8 @@
 				
 				$('#finalize').style.display = 'inline-block';
 				
+				var prng_seed_orig = prng_seed;
+				
 // 				var raw = $('#item-count').value.toLowerCase();
 // 				var [n,d] = raw.split('d');
 				
@@ -600,6 +642,7 @@
 				
 				var o = {
 					exclude_pocket: $('#exclude-pockets').checked,
+					exclude_cursed: $('#exclude-cursed').checked,
 					max_weapons: parseFloat($('#max-weapons').value),
 					max_armor: parseFloat($('#max-armor').value),
 					max_scrolls: parseFloat($('#max-scrolls').value),
@@ -607,12 +650,18 @@
 					pmul: parseFloat($('#price-mul').value),
 					qdice: $('#avail-dice').value.split('d'),
 					CR: CRn.selectedOptions[0].value - 1,
+					include: {
+						PH: $('#include-PH').checked,
+						DM: $('#include-DM').checked,
+						XG: $('#include-XG').checked,
+						EE: $('#include-EE').checked,
+					},
 				};
 				
 				generateList(o);
 				
-				window.location.hash = prng_seed_orig + '_' 
-					+ (o.exclude_pocket ? '1' : '0') + '!'
+// 				window.location.hash = prng_seed_orig + '_' 
+// 					+ (o.exclude_pocket ? '1' : '0') + '!'
 			})
 			
 		});
@@ -643,11 +692,12 @@
 				<control cid="max-scrolls" label="Max Scrolls:" type="edit">2</control>
 				
 				<hr/>
-				<control cid="exclude-pockets" label="Exclude Pocket Dimension:" type="checkbox">1</control>
-				<control cid="include-PH" label="Include Player's Handbook:" type="checkbox">1</control>
-				<control cid="include-DM" label="Include DM's Guide:" type="checkbox">1</control>
-				<control cid="include-XG" label="Include Xanathar's Guide:" type="checkbox">1</control>
-				<control cid="include-EE" label="Include Elemental Evil:" type="checkbox">0</control>
+				<control cid="exclude-pockets" label="Exclude Pocket Dimension" type="checkbox">1</control>
+				<control cid="exclude-cursed" label="Exclude Cursed Items" type="checkbox">1</control>
+				<control cid="include-PH" label="Include Player's Handbook" type="checkbox">1</control>
+				<control cid="include-DM" label="Include DM's Guide" type="checkbox">1</control>
+				<control cid="include-XG" label="Include Xanathar's Guide" type="checkbox">1</control>
+				<control cid="include-EE" label="Include Elemental Evil" type="checkbox">0</control>
 			</div>
 		</div>
 		
