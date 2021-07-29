@@ -962,7 +962,7 @@ module.exports.item_desc = {
 	'conjure woodland beings': "You summon fey creatures that appear in unoccupied spaces that you can see within range.   Choose one of the following options for what appears:  *  One fey creature of challenge rating 2 or lower  •  Two fey creatures of challenge rating 1 or lower  •  Four fey creatures of challenge rating 1/2 or lower  •  Eight fey creatures of challenge rating 1/4 or lower   A summoned creature disappears when it drops to 0 hit points or when the spell ends.   The summoned creatures are friendly to you and your companions. Roll initiative for the summoned creatures as a group, which have their own turns. They obey any verbal commands that you issue to them (no action required by you). If you don't issue any commands to them, they defend themselves from hostile creatures, but otherwise take no actions.  The DM has the creatures’ statistics.",
 	'contact other plane': "You mentally contact a demigod, the spirit of a long-dead sage, or some other mysterious entity from another plane.  Contacting this extraplanar intelligence can strain or even break your mind. When you cast this spell, make a DC 15 Intelligence saving throw. On a failure, you take 6d6 psychic damage and are insane until you finish a long rest. While insane, you can't take actions, can’t understand what other creatures say, can’t read, and speak only in gibberish. A greater restoration spell cast on you ends this effect.   On a successful save, you can ask the entity up to five questions. You must ask your questions before the spell ends. The DM answers each question with one word, such as \"yes,\" no, maybe, never, irrelevant, or unclear (if the entity doesn’t know the answer to the question). If a one-word answer would be misleading, the DM might instead offer a short phrase as an answer.",
 	'contagion': "Your touch inflicts disease.  Make a melee spell attack against a creature within your reach. On a hit, you afflict the creature with a disease of your choice from any of the ones described below.   At the end of each of the target's turns, it must make a Constitution saving throw. After failing three of these saving throws, the disease’s effects last for the duration, and the creature stops making these saves. After succeeding on three of these saving throws, the creature recovers from the disease, and the spell ends.   Since this spell induces a natural disease in its target, any effect that removes a disease or otherwise ameliorates a disease’s effects apply to it.   Blinding Sickness Pain grips the creature’s mind, and its eyes turn milky white. The creature has disadvantage on Wisdom checks and Wisdom saving throws and is blinded.   Filth Fever A raging fever sweeps through the creature’s body. The creature has disadvantage on Strength checks, Strength saving throws, and attack rolls that use Strength.   Flesh Rot The creature’s flesh decays. The creature has disadvantage on Charisma checks and vulnerability to all damage.   Mindfire  The creature’s mind becomes feverish. The creature has disadvantage on Intelligence checks and Intelligence saving throws, and the creature behaves as if under the effects of the confusion spell during combat.   Seizure  The creature is overcome with shaking. The creature has disadvantage on Dexterity checks, Dexterity saving throws, and attack rolls that use Dexterity.   Slimy Doom  The creature begins to bleed uncontrollably. The creature has disadvantage on Constitution checks and Constitution saving throws. In addition, whenever the creature takes damage, it is stunned until the end of its next turn.",
-	'contingency': "Choose a spell of 5th level or lower that you can cast, that has a casting time of 1 action, and that can target you.  You cast that spell --called the contingent spell as part of casting contingency, expending spell slots for both, but the contingent spell doesn't come into effect. Instead, it takes effect when a certain circumstance occurs. You describe that circumstance when you cast the two spells. For example, a contingency cast with water breathing might stipulate that water breathing comes into effect when you are engulfed in water or a similar liquid.   The contingent spell takes effect immediately after the circumstance is met for the first time, whether or not you want it to. and then contingency ends.   The contingent spell takes effect only on you, even if it can normally target others. You can use only one contingency spell at a time. If you cast this spell again, the effect of another contingency spell on you ends. Also, contingency ends on you if its material component is ever not on your person.",
+	'contingency': "Choose a spell of 5th level or lower that you can cast, that has a casting time of 1 action, and that can target you.  You cast that spell --called the contingent spell-- as part of casting contingency, expending spell slots for both, but the contingent spell doesn't come into effect. Instead, it takes effect when a certain circumstance occurs. You describe that circumstance when you cast the two spells. For example, a contingency cast with water breathing might stipulate that water breathing comes into effect when you are engulfed in water or a similar liquid.   The contingent spell takes effect immediately after the circumstance is met for the first time, whether or not you want it to. and then contingency ends.   The contingent spell takes effect only on you, even if it can normally target others. You can use only one contingency spell at a time. If you cast this spell again, the effect of another contingency spell on you ends. Also, contingency ends on you if its material component is ever not on your person.",
 	'continual flame': "A flame, equivalent in brightness to a torch, springs forth from an object that you touch.  The effect looks like a regular flame, but it creates no heat and doesn't use oxygen. A continual flame can be covered or hidden but not smothered or quenched.",
 	'control flames': 'You choose a nonmagical flame that you can see within range and that fits within a 5-foot cube. You affect it in one of the following ways: - You instantaneously expand the flame 5 feet in one direction, provided that wood or other fuel is present in the new location. - You instantaneously extinguish the flames within the cube. - You double or halve the area of bright light and dim light cast by the flame, change its color, or both. The change lasts for 1 hour. - You cause simple shapes -- such as the vague form of a creature, an inanimate object, or a location — to appear within the flames and animate as you like. The shapes last for 1 hour. If you cast this spell multiple times, you can have up to three non-instantaneous',
 	'control water': "Until the spell ends, you control any freestanding water inside an area you choose that is a cube up to 100 feet on a side.  You can choose from any of the following effects when you cast this spell. As an action on your turn, you can repeat the same effect or choose a different one.   Flood  You cause the water level of all standing water in the area to rise by as much as 20 feet. If the area includes a shore, the flooding water spills over onto dry land. If you choose an area in a large body of water, you instead create a 20-foot tall wave that travels from one side of the area to the other and then crashes down. Any Huge or smaller vehicles in the wave's path are carried with it to the other side. Any Huge or smaller vehicles struck by the wave have a 25 percent chance of capsizing. The water level remains elevated until the spell ends or you choose a different effect. If this effect produced a wave, the wave repeats on the start of your next turn while the flood effect lasts.   Part Water  You cause water in the area to move apart and create a trench. The trench extends across the spell’s area, and the separated water forms a wall to either side. The trench remains until the spell ends or you choose a different effect. The water then slowly fills in the trench over the course of the next round until the normal water level is restored.   Redirect Flow You cause flowing water in the area to move in a direction you choose, even if the water has to flow over obstacles, up walls, or in other unlikely directions. The water in the area moves as you direct it, but once it moves beyond the spell’s area, it resumes its flow based on the terrain conditions. The water continues to move in the direction you chose until the spell ends or you choose a different effect.   Whirlpool This effect requires a body of water at least 50 feet square and 25 feet deep. You cause a whirlpool to form in the center of the area. The whirlpool forms a vortex that is 5 feet wide at the base, up to 50 feet wide at the top, and 25 feet tall. Any creature or object in the water and within 25 feet of the vortex is pulled 10 feet toward it. A creature can swim away from the vortex by making a Strength (Athletics) check against your spell save DC.  When a creature enters the vortex for the first time on a turn or starts its turn there, it must make a Strength saving throw. On a failed save, the creature takes 2d8 bludgeoning damage and is caught in the vortex until the spell ends. On a successful save, the creature takes half damage, and isn’t caught in the vortex. A creature caught in the vortex can use its action to try to swim away from the vortex as described above, but has disadvantage on the Strength (Athletics) check to do so.  The first time each turn that an object enters the vortex, the object takes 2d8 bludgeoning damage,this damage occurs each round it remains in the vortex.",
@@ -994,7 +994,7 @@ module.exports.item_desc = {
 	'detect magic': 'For the duration, you sense the presence of magic within 30 feet of you. If you sense magic in this way, you can use your action to see a faint aura around any visible creature or object in the area that bears magic, and you learn its school of magic, if any.   The spell can penetrate most barriers, but is blocked by 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood or dirt.',
 	'detect poison and disease': 'For the duration, you can sense the presence and location of poisons, poisonous creatures, and diseases within 30 feet of you. You also identify the kind of poison, poisonous creature, or disease in each case.   The spell can penetrate most barriers, but is blocked by 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood or dirt.',
 	'detect thoughts': "For the duration, you can read the thoughts of certain creatures.  When you cast the spell and as your action on each turn until the spell ends, you can focus your mind on any one creature that you can see within 30 feet of you. If the creature you choose has an Intelligence of 3 or lower or doesn't speak any language, the creature is unaffected.   You initially learn the surface thoughts of the creature--what is most on its mind in that moment. As an action, you can either shift your attention to another creature’s thoughts or attempt to probe deeper into the same creature’s mind. If you probe deeper, the target must make a W isdom saving throw. If it fails, you gain insight into its reasoning (if any), its emotional state, and something that loom s large in its mind (such as something it worries over, loves, or hates). If it succeeds, the spell ends. Either way, the target knows that you are probing into its mind, and unless you shift your attention to another creature’s thoughts, the creature can use its action on its turn to make an Intelligence check contested by your Intelligence check; if it succeeds, the spell ends.   Questions verbally directed at the target creature naturally shape the course of its thoughts, so this spell is particularly effective as part of an interrogation.   You can also use this spell to detect the presence of thinking creatures you can’t see. When you cast the spell or as your action during the duration, you can search for thoughts within 30 feet of you. The spell can penetrate barriers, but 2 feet of rock, 2 inches of any metal other than lead, or a thin sheet of lead blocks you. You can’t detect a creature with an Intelligence of 3 or lower or one that doesn’t speak any language.   Once you detect the presence of a creature in this way, you can read its thoughts for the rest of the duration as described above, even if you can’t see it, but it must still be within range.",
-	'dimension door': "You teleport yourself from your current location to any other spot within range. You arrive at exactly the spot desired. It can be a place you can see, one you can visualize, or one you can describe by stating distance and direction, such as \"\"200 feet straight downward\"\" or \"upward to the northwest at a 45-degree angle, 300 feet\".    You can bring along objects as long as their weight doesn't exceed what you can carry. You can also bring one willing creature of your size or smaller who is carrying gear up to its carrying capacity. The creature must be within 5 feet of you when you cast this spell.   If you would arrive in a place already occupied by an object or a creature, you and any creature traveling with you each take 4d6 force damage, and the spell fails to teleport you.",
+	'dimension door': "You teleport yourself from your current location to any other spot within range. You arrive at exactly the spot desired. It can be a place you can see, one you can visualize, or one you can describe by stating distance and direction, such as \"\"200 feet straight downward\"\" or \"upward to the northwest at a 45-degree angle, 300 feet\". You can bring along objects as long as their weight doesn't exceed what you can carry. You can also bring one willing creature of your size or smaller who is carrying gear up to its carrying capacity. The creature must be within 5 feet of you when you cast this spell.   If you would arrive in a place already occupied by an object or a creature, you and any creature traveling with you each take 4d6 force damage, and the spell fails to teleport you.",
 	'disguise self': "You make yourself - --including your clothing, armor, weapons, and other belongings on your person – look different until the spell ends or until you use your action to dismiss it.  You can seem  1 foot shorter or taller and can appear thin, fat, or in between. You can't change your body type, so you must adopt a form that has the same basic arrangement of limbs. Otherwise, the extent of the illusion is up to you.   The changes wrought by this spell fail to hold up to physical inspection. For example, if you use this spell to add a hat to your outfit, objects pass through the hat, and anyone who touches it would feel nothing or would feel your head and hair. If you use this spell to appear thinner than you are, the hand of som eone who reaches out to touch you would bump into you while it was seemingly still in midair. To discern that you are disguised, a creature can use its action to inspect your appearance and must succeed on an Intelligence (Investigation) check against your spell save DC.",
 	'disintegrate': 'A thin green ray springs from your pointing finger to a target that you can see within range.  The target can be a creature, an object, or a creation of magical force, such as the wall created by wall of force.   A creature targeted by this spell must make a Dexterity saving throw. On a failed save, the target takes 10d6 + 40 force damage. If this damage reduces the target to 0 hit points, it is disintegrated.   A disintegrated creature and everything it is wearing and carrying, except magic items, are reduced to a pile of fine gray dust. The creature can be restored to life only by means of a true resurrection or a wish spell.   This spell automatically disintegrates a Large or smaller nonmagical object or a creation of magical force. If the target is a Huge or larger object or creation of force, this spell disintegrates a 10-foot-cube portion of it. A magic item is unaffected by this spell.',
 	'dispel evil and good': "Shimmering energy surrounds and protects you from fey, undead, and creatures originating from beyond the Material Plane. For the duration, celestials, elementals, fey, fiends, and undead have disadvantage on attack rolls against you.   You can end the spell early by using either of the following special functions.   Break  Enchantment As your action, you touch a creature you can reach that is charmed, frightened, or possessed by a celestial, an elemental, a fey, a fiend, or an undead. The creature you touch is no longer charmed, frightened, or possessed by such creatures.   Dismissal As your action, make a melee spell attack against a celestial, an elemental, a fey, a fiend, or an undead you can reach. On a hit, you attempt to drive the creature back to its home plane. The creature must succeed on a Charisma saving throw or be sent back to its home plane (if it isn't there already). If they aren’t on their home plane, undead are sent to the Shadowfell, and fey are sent to the Feywild.",
@@ -1160,7 +1160,7 @@ module.exports.item_desc = {
 	'mending': "This spell repairs a single break or tear in an object you touch, such as broken chain link, two halves of a broken key, a torn cloack, or a leaking wineskin. As long as the break or tear is no larger than 1 foot in any dimension, you mend it, leaving no trace of the former damage.  This spell can physically repair a magic item or construct, but the spell can't restore magic to such an object.",
 	'mental prison': "You attempt to bind a creature within an illusory cell that only it perceives. One creature you can see within range must make an Intelligence saving throw. The target succeeds automatically if it is immune to being charmed. On a successful save, the target takes 5d10 psychic damage, and the spell ends. On a failed save, the target takes 5d10 psychic damage, and you make the area immediately around the target's space appear dangerous to it in some way. You might cause the target to perceive itself as being surrounded by fire, floating razors, or hideous maws filled with dripping teeth. Whatever form the illusion takes, the target can’t see or hear anything beyond it and is restrained for the spell’s duration. If the target is moved out of the illusion, makes a melee attack through it, or reaches any part of its body through it, the target takes 10d10 psychic damage, and the spell ends.",
 	'message': "You point your finger toward a creature within range and whisper a message. The target (and only the target) hears the message and can reply in a whisper that only you can hear.  You can cast this spell through solid objects if you are familiar with the target and know it is beyond the barrier. Magical silence, 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood blocks the spell. The spell doesn't have to follow a straight line and can travel freely around corners or through openings.",
-	'meteor swarm': "Blazing orbs of fire plummet to the ground at four different points you can see within range. Each creature in a 40-foot-radius sphere centered on each point you choose must make a Dexterity saving throw. The sphere spreads around corners. A creature takes 20d6 fire damage and 20d6 bludgeoning damage on a failed save, or half as much damage on a sucessful one. A creature in the area of more than one fiery burst is affected only once.  The spell damages objects in the area and ignites flammable objects that aren't being worn or carried.",
+	'meteor swarm': "Blazing orbs of fire plummet to the ground at four different points you can see within range. Each creature in a 40-foot-radius sphere centered on each point you choose must make a Dexterity saving throw. The sphere spreads around corners. A creature takes 20d6 fire damage and 20d6 bludgeoning damage on a failed save, or half as much damage on a successful one. A creature in the area of more than one fiery burst is affected only once.  The spell damages objects in the area and ignites flammable objects that aren't being worn or carried.",
 	'mighty fortress': "A fortress of stone erupts from a square area of ground of your choice that you can see within range. The area is 120 feet on each side, and it must not have any buildings or other structures on it. Any creatures in the area are harmlessly lifted up as the fortress rises. The fortress has four turrets with square bases, each one 20 feet on a side and 30 feet tall, with one turret on each corner. The turrets are connected to each other by stone walls that are each 80 feet long, creating an enclosed area. Each wall is 1 foot thick and is composed of panels that are 10 feet wide and 20 feet tall. Each panel is contiguous with two other panels or one other panel and a turret. You can place up to four stone doors in the fortress's outer wall. A small keep stands inside the enclosed area. The keep has a square base that is 50 feet on each side, and it has three floors with 10-foot-high ceilings. Each of the floors can be divided into as many rooms as you like, provided each room is at least 5 feet on each side. The floors of the keep are connected by stone staircases, its walls are 6 inches thick, and interior rooms can have stone doors or open archways as you choose. The keep is furnished and decorated however you like, and it contains sufficient food to serve a nine-course banquet for up to 100 people each day. Furnishings, food, and other objects created by this spell crumble to dust if removed from the fortress. A staff of one hundred invisible servants obeys anycommand given to them by creatures you designate when you cast the spell. Each servant functions as if created by the unseen servant spell. The walls, turrets, and keep are all made of stone that can be damaged. Each 10--foot—bya10-foot section of stone has AC 15 and 30 hit points per inch of thickness. It is immune to poison and psychic damage. Reducing a section of stone to 0 hit points destroys it and might cause connected sections to buckle and collapse at the DM’s discretion. After 7 days or when you cast this spell somewhere else, the fortress harmlessly crumbles and sinks back into the ground, leaving any creatures that were inside it safely on the ground. Casting this spell on the same spot once every 7 days for a year makes the fortress permanent.",
 	'mind blank': "Until the spell ends, one willing creature you touch is immune to psychic damage, any effect that would sense its emotions or read its thoughts, divination spells, and the charmed condition. The spell even foils wish spells and spells or effects of similar power used to affect the target's mind or to gain information about the target.",
 	'mind spike': "You reach into the mind of one creature you can see within range. The target must make a Wisdom saving throw, taking 3d8 psychic damage on a failed save, or half as much damage on a successful one. On a failed save, you also always know the target's location until the spell ends, but only while the two of you are on the same plane of existence. While you have this knowledge, the target can't become hidden from you, and if it’s invisible, it gains no benefit from that condition against you.",
@@ -3060,4 +3060,182 @@ module.exports.class_spells = {
 		'wish': 9,
 	},
 }; // class_spells
+
+
+
+module.exports.npc_appearance_traits = {
+	"Distinctive jewelry: earrings , necklace, circlet, bracelets",
+	"Piercings",
+	"Flamboyant or outlandish clothes",
+	"Formal, clean clothes",
+	"Ragged, dirty clothes",
+	"Pronounced scar",
+	"Missing teeth",
+	"Missing fingers",
+	"Unusual eye color (or two different colors)",
+	"Tattoos",
+	"Birthmark",
+	"Unusual skin color",
+	"Bald",
+	"Braided beard or hair",
+	"Unusual hair color",
+	"Nervous eye twitch",
+	"Distinctive nose",
+	"Distinctive posture (crooked or rigid)",
+	"Exceptionally beautiful",
+	"Exceptionally ugly",
+};
+
+
+module.exports.daily_food_and_water_needs = {
+	'tiny' : { food: {qty: .25, unit: 'lb'}, water: {qty: .25, 'gal'}},
+	'small' : { food: {qty: 1, unit: 'lb'}, water: {qty: 1, 'gal'}},
+	'medium' : { food: {qty: 1, unit: 'lb'}, water: {qty: 1, 'gal'}},
+	'large' : { food: {qty: 4, unit: 'lb'}, water: {qty: 4, 'gal'}},
+	'huge' : { food: {qty: 16, unit: 'lb'}, water: {qty: 16, 'gal'}},
+	'gargantuan' : { food: {qty: 64, unit: 'lb'}, water: {qty: 64, 'gal'}},
+};
+
+module.exports.settlement_gen = {};
+
+
+module.exports.settlement_gen.ruler_status = [
+//  dice min/max       description
+	[1, 5, "Respected, fair, and just",],
+	[6, 8, "Feared tyrant",],
+	[9, 9, "Weakling manipulated by others",],
+	[10, 10, "Illegitimate ruler, simmering civil war",],
+	[11, 11, "Ruled or controlled by a powerful monster",],
+	[12, 12, "Mysterious, anonymous cabal",],
+	[13, 13, "Contested leadership, open fighting",],
+	[14, 14, "Cabal seized power openly",],
+	[15, 15, "Doltish lout",],
+	[16, 16, "On deathbed, claimants compete for power",],
+	[17, 18, "Iron-willed but respected",],
+	[19, 20, "Religious leader",],
+];
+
+module.exports.settlement_gen.notable_traits = [
+	'Canals in place of streets',
+	'Massive statue or monument',
+	'Grand temple',
+	'Large fortress',
+	'Verdant parks and orchards',
+	'River divides town',
+	'Major trade center',
+	'Headquarters of a powerful family or guild',
+	'Population mostly wealthy',
+	'Destitute, rundown',
+	'Awful smell (tanneries, open sewers)',
+	'Center of trade for one specific good',
+	'Site of many battles',
+	'Site of a mythic or magical event',
+	'Important library or archive',
+	'Notable library or academy',
+	'Sinister reputation',
+	'Site of important tomb or graveyard',
+	'Built atop ancient ruins',
+	'Worship of all gods banned',
+];
+
+module.exports.settlement_gen.building_type = [
+	[1, 10, 'Residence'],
+	[11, 12, 'Religious'],
+	[13, 15, 'Tavern'],
+	[16, 17, 'Warehouse'],
+	[18, 20, 'Shop'],
+];
+
+
+module.exports.settlement_gen.buildings = {};
+
+module.exports.settlement_gen.buildings.Residence = [
+	[1, 2, 'Abandoned squat',],
+	[3, 8, 'Middle-class home',],
+	[9, 10, 'Upper-class home',],
+	[11, 15, 'Crowded tenement',],
+	[16, 17, 'Orphanage',],
+	[18, 18, "Hidden slavers' den",],
+	[19, 19, 'Front for a secret cult',],
+	[20, 20, 'Lavish, guarded mansion',],
+];
+
+module.exports.settlement_gen.buildings.Religious = [
+	[1, 10, 'Temple to a good or neutral deity',],
+	[11, 12, 'Temple to a false deity (run by charlatan priests)',],
+	[13, 13, 'Home of ascetics',],
+	[14, 15, 'Abandoned shrine',],
+	[16, 17, 'Library dedicated to religious study',],
+	[18, 20, 'Hidden shrine to a fiend or an evil deity',],
+];
+
+module.exports.settlement_gen.buildings.Warehouse = [
+	[1, 4, 'Empty or abandoned',],
+	[5, 6, 'Heavily guarded, expensive goods',],
+	[7, 10, 'Cheap goods',],
+	[11, 14, 'Bulk goods',],
+	[15, 15, 'Live animals',],
+	[16, 17, 'Weapons / armor',],
+	[18, 19, 'Goods from a distant land',],
+	[20, 20, "Secret smuggler's den",],
+];
+
+module.exports.settlement_gen.buildings.Shop = [
+	'Pawnshop',
+	'Smithy',
+	'Herbs / incense',
+	'Carpenter',
+	'Fruits / vegetables',
+	'Weaver',
+	'Dried meats',
+	'Jeweler',
+	'Pottery',
+	'Baker',
+	'Undertaker',
+	'Mapmaker',
+	'Books ',
+	'Tailor',
+	'Moneylender',
+	'Ropemaker',
+	'Weapons / armor',
+	'Mason',
+	'Chandler',
+	'Scribe',
+];
+
+
+module.exports.settlement_gen.buildings.Tavern = [
+	[1, 5, 'Quiet, low-key bar',],
+	[6, 9, 'Raucous dive',],
+	[10, 10, "Thieves' guild hangout",],
+	[11, 11, 'Gathering place for a secret society',],
+	[12, 13, 'Upper-class dining club',],
+	[14, 15, 'Gambling den',],
+	[16, 17, 'Caters to specific race or guild',],
+	[18, 18, 'Members-only club',],
+	[19, 20, 'Brothel',], 
+];
+
+module.exports.settlement_gen.tavern_names = [
+	['The Silver', 'Eel'],
+	['The Golden', 'Dolphin'],
+	['The Staggering', 'Dwarf'],
+	['The Laughing', 'Pegasus'],
+	['The Prancing', 'Pony'],
+	['The Gilded', 'Rose'],
+	['The Running', 'Stag'],
+	['The Howling', 'Wolf'],
+	['The Slaughtered', 'Lamb'],
+	['The Leering', 'Demon'],
+	['The Drunken', 'Goat'],
+	['The Leaping', 'Spirit'],
+	['The Roaring', 'Horde'],
+	['The Frowning', 'Jester'],
+	['The Lonely', 'Mountain'],
+	['The Wandering', 'Eagle'],
+	['The Mysterious', 'Satyr'],
+	['The Barking', 'Dog'],
+	['The Black', 'Spider'],
+	['The Gleaming', 'Star '],
+];
 
